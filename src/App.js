@@ -39,7 +39,23 @@ GridRecord.propTypes = {
     })
 };
 
-class GridComponent extends React.Component {
+export class SummaryActive extends React.Component {
+    render(){
+        return (
+            <div>Active Users:
+                {this.props.records.filter((record)=>record.active).length}</div>
+        )
+    }
+}
+export class SummaryUsers extends React.Component {
+    render(){
+        return (
+            <div>Users Count: {this.props.records.length}</div>
+        )
+    }
+}
+
+export default class GridComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -88,14 +104,14 @@ class GridComponent extends React.Component {
                     </thead>
                     <tbody>
                     {this.state.records.map((record, index) => {
-                        return <GridRecord record={record} key={index} toggleActive={this.toggleActive.bind(this,
-                            index)}/>
+                        return <GridRecord record={record} key={index} toggleActive={this.toggleActive.bind(this, index)}/>
                     })}
                     </tbody>
                 </table>
+                <div>{this.props.children &&
+                React.cloneElement(this.props.children, { records: this.state.records })}</div>
             </div>
         )
     }
 }
 
-export default GridComponent;
