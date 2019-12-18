@@ -15,8 +15,12 @@ class GridRecord extends React.Component {
     render() {
         let {record} = this.props;
         return <tr>
-            <th>{record.firstName}</th>
-            <th>{record.lastName}</th>
+            <th>
+                <span onChange={this.props.handleFilterChange} onDoubleClick={this.props.handleFilterChange}>{record.firstName} </span>
+            </th>
+            <th>
+                <span onChange={this.props.handleFilterChange} onDoubleClick={this.props.handleFilterChange}>{record.lastName} </span>
+            </th>
             <th><input type="checkbox" checked={record.active}
                        onChange={this.props.toggleActive}/></th>
         </tr>
@@ -43,25 +47,36 @@ class GridComponent extends React.Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount(){
+        this.refs.filterInput && this.refs.filterInput.focus();
         this.setState({
-            records: dataSource
+            records:dataSource
         })
     }
 
-    toggleActive(index){
+    toggleActive(index) {
         let {records} = this.state;
         records[index].active = !records[index].active;
         this.setState({
-            records:records
+            records: records
         })
+    }
+
+    handleFilterChange(e) {
+        let value = e.target.value,
+            records = dataSource.filter((record) =>
+                record.lastName.toUpperCase().includes(value.toUpperCase()));
+        this.setState({
+            records: records
+        });
     }
 
     render() {
         return (
             <div style={{width: 300, height: 300, padding: 20}}>
                 <p>
-                    <input type="text" placeholder="Filter by..."/>
+                    <input type="text" ref="filterInput" placeholder="Filter by..."
+                           onChange={(e)=> this.handleFilterChange(e)}/>
                 </p>
                 <table className="table table-condensed">
                     <thead>
@@ -72,7 +87,7 @@ class GridComponent extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.state.records.map((record, index)=>{
+                    {this.state.records.map((record, index) => {
                         return <GridRecord record={record} key={index} toggleActive={this.toggleActive.bind(this,
                             index)}/>
                     })}
