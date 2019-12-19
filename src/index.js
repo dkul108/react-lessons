@@ -4,13 +4,10 @@ import './index.css';
 import { Provider } from 'react-redux'
 import GridComponent from './Components/grid';
 import {SummaryActive, SummaryUsers} from './Components/summaries';
-import {UserDetails} from './Components/user-details';
+import UserDetails from './Components/user-details';
 import * as serviceWorker from './serviceWorker';
 import {HashRouter, Switch, Route, Link} from "react-router-dom";
 import {store} from './Containers/App'
-// import configureStore from './Store/index'
-//
-// const store = configureStore();
 
 function Summary(props){
     return (<div>

@@ -74,12 +74,11 @@ class GridComponent extends React.Component {
     }
 
     handleFilterChange(e) {
-        // let value = e.target.value,
-        //     records = dataSource.filter((record) =>
-        //         record.lastName.toUpperCase().includes(value.toUpperCase()));
-        // this.setState({
-        //     records: records
-        // });
+        let {dispatch} = this.props;
+        dispatch({
+            type: "FILTER",
+            value: e.target.value
+        });
     }
 
     render() {

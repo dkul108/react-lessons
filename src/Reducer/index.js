@@ -34,11 +34,15 @@ export function grid(state = gridRecords, action) {
             newState[action.value].active = !newState[action.value].active;
             return newState;
         case "FILTER":
-        //Filter will be implemented later
+            let value = action.value;
+            return state.filter((record) =>
+                    record.lastName.toUpperCase().includes(value.toUpperCase()));
         default:
             return state
     }
 }
+
+
 
 export function details(state = detailsRecords, action) {
     switch (action.type) {
