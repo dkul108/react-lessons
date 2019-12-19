@@ -1,4 +1,7 @@
 import {combineReducers} from "redux";
+import {TOGGLE_ACTIVE, FILTER, FILTER_DETAILS, START_LOADING, STOP_LOADING, ADD_DATA}
+    from '../Constants'
+
 
 
 
@@ -22,27 +25,55 @@ let gridRecords = [
         skills: ["Fortran", "Lua", "R#"]
     }];
 
+let gridState = {
+    records:[],
+    filtered: [],
+    loading:false
+}
+
 export const rootReducer = combineReducers({
     details,
     grid
 });
 
-export function grid(state = gridRecords, action) {
+export function grid(state = gridState, action) {
     switch (action.type) {
-        case "TOGGLE_ACTIVE":
+        case TOGGLE_ACTIVE:
             let newState = [...state];
             newState[action.value].active = !newState[action.value].active;
             return newState;
-        case "FILTER":
+        case FILTER:
             let value = action.value;
-            return state.filter((record) =>
+            let records=state.records;
+            if (value.length > 0) {
+                records= state.records.filter((record) =>
                     record.lastName.toUpperCase().includes(value.toUpperCase()));
+            }
+            return {
+                ...state,
+                records
+            };
+            //todo - in order not to lost state after search - assing inital state and filtered like here:
+            // let filteredOutIds = state.records.filter(
+            //     (record) => !record.lastName.toUpperCase().includes(value.toUpperCase()))
+            //     .map(record => record.id);
+            // return Object.assign({}, state,
+            //     {filtered: filteredOutIds});
+        case FILTER_DETAILS:
+
+        case START_LOADING:
+            return Object.assign({}, state, {loading: true});
+        case STOP_LOADING:
+            return Object.assign({}, state, {loading: false});
+        case ADD_DATA:
+            return Object.assign({}, state, {
+                records:[...action.value]
+            });
+
         default:
             return state
     }
 }
-
-
 
 export function details(state = detailsRecords, action) {
     switch (action.type) {

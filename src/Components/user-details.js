@@ -1,11 +1,12 @@
 import React from "react";
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types';
+import {filterDetails} from '../Actions'
 
 require("bootstrap/dist/css/bootstrap.css");
 
 export class User extends React.Component {
-    render(){
+    render() {
         let {detail} = this.props;
         return (
             <div className="container">
@@ -19,7 +20,7 @@ export class User extends React.Component {
                                     <p><strong>Hobbies: </strong> {detail.hobbies}
                                     </p>
                                     <p><strong>Skills: </strong>
-                                        {detail.skills.map((skill, i)=>{
+                                        {detail.skills.map((skill, i) => {
                                             return <span key={i}
                                                          className="tags">{skill}</span>
                                         })}
@@ -27,8 +28,10 @@ export class User extends React.Component {
                                 </div>
                                 <div className="col-xs-12 col-sm-4 text-center">
                                     <figure>
-                                        <img src="http://www.bitrebels.com/wpcontent/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-2.jpg" alt=""
-                                             className="img-circle img-responsive"/>
+                                        <img
+                                            src="http://www.bitrebels.com/wpcontent/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-2.jpg"
+                                            alt=""
+                                            className="img-circle img-responsive"/>
                                     </figure>
                                 </div>
                             </div>
@@ -68,6 +71,18 @@ class UserDetails extends React.Component {
 
     componentWillReceiveProps(props) {
         this.filterDetails(props.match.params.id);
+    }
+
+    componentDidMount() {
+        let {dispatch} = this.props;
+        dispatch(filterDetails(this.props.match.params.id));
+    }
+
+    componentDidUpdate(prevProps) {
+        let {dispatch} = this.props;
+        if (prevProps.match.params.id !== this.props.match.params.id) {
+            dispatch(this.filterDetails(this.props.match.params.id))
+        }
     }
 
     render() {

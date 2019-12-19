@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import logo from './../logo.svg'
 import {connect} from 'react-redux'
+import {TOGGLE_ACTIVE, FILTER, FILTER_DETAILS} from '../Constants'
+import {filterGrid, toggleActive, loadDataInGrid} from '../Actions'
 
 require("bootstrap/dist/css/bootstrap.css");
 
@@ -43,8 +45,6 @@ GridRecord.propTypes = {
     })
 };
 
-//todo:remove hardcoded data
-//export default class GridComponent extends React.Component {
 class GridComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -53,35 +53,29 @@ class GridComponent extends React.Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount(){
         this.refs.filterInput && this.refs.filterInput.focus();
+        this.loadData();
     }
 
-    // toggleActive(index) {
-    //     let {records} = this.state;
-    //     records[index].active = !records[index].active;
-    //     this.setState({
-    //         records: records
-    //     })
-    // }
+    loadData(){
+        let {dispatch} = this.props;
+        dispatch(loadDataInGrid());
+    }
 
     toggleActive(index) {
         let {dispatch} = this.props;
-        dispatch({
-            type: "TOGGLE_ACTIVE",
-            value: index
-        });
+        dispatch(toggleActive(index));
     }
 
     handleFilterChange(e) {
         let {dispatch} = this.props;
-        dispatch({
-            type: "FILTER",
-            value: e.target.value
-        });
+        dispatch(filterGrid(e.target.value));
     }
 
     render() {
+
+        console.log("props", this.props)
         return (
             <div style={{width: 300, height: 300, padding: 20}}>
                 <p>
@@ -112,12 +106,16 @@ class GridComponent extends React.Component {
 }
 
 GridComponent.propTypes = {
-    records: PropTypes.array.isRequired
+    records: PropTypes.array.isRequired,
+    filtered: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {
     return {
-        records: state.grid
+        records: state.grid.records,
+        filtered: state.grid.filtered,
+        loading: state.grid.loading
     }
 }
 
